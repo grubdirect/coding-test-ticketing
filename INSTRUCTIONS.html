@@ -625,15 +625,18 @@
 │   │   └── TicketOrderRepository.java   <span class="todo">TODO: order queries</span>
 │   ├── dto/                             <span class="done">all pre-built</span>
 │   ├── service/
-│   │   └── TicketingService.java        <span class="todo">TODO: all business logic</span>
+│   │   ├── TicketingService.java        <span class="todo">TODO: all business logic</span>
+│   │   └── SalesReportService.java      <span class="todo">TODO: optimize (SLOW!)</span>
 │   ├── controller/
-│   │   └── TicketingController.java     <span class="todo">TODO: REST endpoints</span>
+│   │   ├── TicketingController.java     <span class="todo">TODO: REST endpoints</span>
+│   │   └── SalesReportController.java   <span class="done">pre-built</span>
 │   ├── notification/
 │   │   ├── NotificationService.java    <span class="done">pre-built interface</span>
 │   │   └── LoggingNotificationService  <span class="done">pre-built (logs emails)</span>
 │   ├── exception/                       <span class="done">all pre-built</span>
 │   └── config/
 │       ├── DataInitializer.java         <span class="done">seeds 2 events</span>
+│       ├── ReportDataSeeder.java        <span class="done">seeds ~100K holds + ~35K orders</span>
 │       └── HoldExpiryScheduler.java     <span class="done">calls your cleanup method</span>
 └── src/test/java/.../
     └── TicketingServiceTest.java        <span class="todo">TODO: write tests</span>
@@ -670,7 +673,8 @@
                 <tr><td>2. Implement REST Endpoints</td><td>10 min</td><td><span class="difficulty medium">Medium</span></td><td>15</td></tr>
                 <tr><td>3. Core Logic: Hold &rarr; Confirm &rarr; Cancel &rarr; Expire</td><td>25 min</td><td style="color:#c0392b;font-weight:700">HARD</td><td>40</td></tr>
                 <tr><td>4. Write Tests (concurrency test is REQUIRED)</td><td>15 min</td><td><span class="difficulty hard">Hard</span></td><td>30</td></tr>
-                <tr><td colspan="3" style="text-align:right;font-weight:700">Total</td><td><strong>100</strong></td></tr>
+                <tr style="background: linear-gradient(135deg, #fff5f5, #fff0f0);"><td>5. Performance Optimization &mdash; Sales Report <em>(Bonus)</em></td><td>+15 min</td><td><span class="difficulty critical">Expert</span></td><td>+20</td></tr>
+                <tr><td colspan="3" style="text-align:right;font-weight:700">Total</td><td><strong>100 (+20 bonus)</strong></td></tr>
             </table>
 
             <div class="interview-tip">
@@ -776,6 +780,12 @@
                             <td><code>/api/events/{eventId}/orders</code></td>
                             <td>200</td>
                             <td>List confirmed orders</td>
+                        </tr>
+                        <tr style="background: #fff5f5;">
+                            <td><span class="method-get">GET</span></td>
+                            <td><code>/api/events/{eventId}/sales-report</code></td>
+                            <td>200</td>
+                            <td>Sales report <em>(Bonus &mdash; optimize this!)</em></td>
                         </tr>
                     </table>
 
@@ -901,6 +911,60 @@
 
                 </div></div>
             </div>
+
+            <!-- Task 5: Performance Optimization (Bonus) -->
+            <div class="task-block" onclick="toggleTask(this)">
+                <div class="task-header">
+                    <h3><span class="task-number" style="background: var(--highlight);">5</span> Bonus: Performance Optimization &mdash; Sales Report</h3>
+                    <div class="task-meta">
+                        <span class="time-badge">+15 min</span>
+                        <span class="difficulty critical">Expert</span>
+                        <span class="points">+20 pts</span>
+                        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+                <div class="task-body"><div class="task-body-inner">
+                    <div class="context">
+                        <strong>File:</strong> <code>SalesReportService.java</code> &mdash; This endpoint works but is unacceptably slow.
+                    </div>
+
+                    <div class="danger-box">
+                        <strong>The Problem:</strong> The endpoint <code>GET /api/events/{eventId}/sales-report</code>
+                        generates a comprehensive sales report for an event. It returns correct data, but it takes
+                        <strong>~10+ seconds</strong> to respond. The database has been seeded with ~100,000 ticket holds
+                        and ~35,000 orders to simulate a production-scale dataset.
+                        <br><br>
+                        <strong>Your Target:</strong> Optimize the response time to under <strong>100 milliseconds</strong>.
+                        The <code>reportGeneratedInMs</code> field in the response tells you how long the report took to generate.
+                    </div>
+
+                    <h4 style="margin: 1rem 0 0.5rem;">Rules</h4>
+                    <ul style="padding-left: 1.25rem; font-size: 0.88rem; margin-bottom: 1rem;">
+                        <li>The response DTO structure (all classes in <code>dto/</code>) must <strong>NOT</strong> change</li>
+                        <li>The endpoint URL must <strong>NOT</strong> change</li>
+                        <li>The returned data must remain <strong>correct</strong></li>
+                        <li>You <strong>MAY</strong> modify <code>SalesReportService.java</code>, entity classes, and repositories</li>
+                        <li>You <strong>MAY</strong> add new repository methods, database indexes, and custom queries</li>
+                    </ul>
+
+                    <h4 style="margin: 1rem 0 0.5rem;">How to Test</h4>
+                    <div class="code-block">
+<span class="comment"># Start the app (wait for "Seeded X holds and Y orders" log message)</span>
+curl http://localhost:8080/api/events/1/sales-report | jq .reportGeneratedInMs
+
+<span class="comment"># Before optimization: ~10,000 ms</span>
+<span class="comment"># After optimization:  &lt;100 ms</span>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>Hint:</strong> Read <code>SalesReportService.java</code> carefully. There are multiple
+                        categories of performance problems. Think about how the code interacts with the database &mdash;
+                        how many queries are being executed, how much data is being loaded, and what work is being done
+                        in Java that the database could do more efficiently.
+                    </div>
+
+                </div></div>
+            </div>
         </div>
 
         <!-- ===================== API REFERENCE ===================== -->
@@ -1007,6 +1071,47 @@ Content-Type: application/json
         <span class="string">"createdAt"</span>: <span class="string">"2025-03-15T10:01:30"</span>
     }
 ]
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem; font-size: 0.95rem;">Sales Report (Bonus Task 5)</h3>
+            <div class="code-block">
+<span class="method-get">GET</span> /api/events/{eventId}/sales-report
+
+<span class="comment">// 200 OK</span>
+{
+    <span class="string">"eventId"</span>: <span class="number">1</span>,
+    <span class="string">"eventName"</span>: <span class="string">"Taylor Swift — Eras Tour"</span>,
+    <span class="string">"venue"</span>: <span class="string">"National Stadium"</span>,
+    <span class="string">"eventDate"</span>: <span class="string">"2025-05-15T20:00:00"</span>,
+    <span class="string">"totalTicketsSold"</span>: <span class="number">8750</span>,
+    <span class="string">"totalRevenue"</span>: <span class="string">"1234567.00"</span>,
+    <span class="string">"tierDetails"</span>: [
+        {
+            <span class="string">"tierId"</span>: <span class="number">1</span>,
+            <span class="string">"tierName"</span>: <span class="string">"VIP Floor"</span>,
+            <span class="string">"price"</span>: <span class="string">"350.00"</span>,
+            <span class="string">"ticketsSold"</span>: <span class="number">125</span>,
+            <span class="string">"revenue"</span>: <span class="string">"43750.00"</span>,
+            <span class="string">"activeHolds"</span>: <span class="number">12</span>,
+            <span class="string">"confirmedHolds"</span>: <span class="number">45</span>,
+            <span class="string">"expiredHolds"</span>: <span class="number">30</span>,
+            <span class="string">"cancelledHolds"</span>: <span class="number">13</span>,
+            <span class="string">"recentOrders"</span>: [ <span class="comment">/* 5 most recent orders for this tier */</span> ]
+        }
+    ],
+    <span class="string">"topCustomers"</span>: [
+        {
+            <span class="string">"customerName"</span>: <span class="string">"Customer_042"</span>,
+            <span class="string">"customerEmail"</span>: <span class="string">"customer_042@example.com"</span>,
+            <span class="string">"totalTickets"</span>: <span class="number">28</span>,
+            <span class="string">"totalSpending"</span>: <span class="string">"5600.00"</span>,
+            <span class="string">"orderCount"</span>: <span class="number">12</span>
+        }
+        <span class="comment">/* ... top 10 customers by spending */</span>
+    ],
+    <span class="string">"holdToConversionRate"</span>: <span class="number">35.12</span>,
+    <span class="string">"reportGeneratedInMs"</span>: <span class="number">9847</span>  <span class="comment">// &lt;-- YOUR TARGET: get this under 100</span>
+}
             </div>
 
             <h3 style="margin: 1.5rem 0 1rem; font-size: 0.95rem;">Error Response Format</h3>

@@ -1,17 +1,21 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/ticketing_db
-    username: ticketing
-    password: ticketing123
+    url: jdbc:postgresql://db.ojxrfsvfjsjfjkkxrtav.supabase.co:5432/postgres
+    username: postgres
+    password: xGixZ7GpKBp7mwP9
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: true
+      ddl-auto: create
+    show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 100
+        order_inserts: true
+        order_updates: true
 
 server:
   port: 8080

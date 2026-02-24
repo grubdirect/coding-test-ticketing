@@ -1,13 +1,19 @@
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/TicketingApplication.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/config/DataInitializer.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/config/HoldExpiryScheduler.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/config/ReportDataSeeder.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/controller/SalesReportController.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/controller/TicketingController.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/ConfirmHoldRequest.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/EventAvailabilityResponse.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/HoldResponse.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/HoldTicketRequest.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/OrderResponse.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/RecentOrderSummary.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/SalesReportResponse.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/TierAvailabilityResponse.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/TierSalesDetail.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/dto/TopCustomer.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/entity/Event.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/entity/HoldStatus.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/entity/TicketHold.java
@@ -24,4 +30,5 @@
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/repository/TicketHoldRepository.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/repository/TicketOrderRepository.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/repository/TicketTierRepository.java
+/Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/service/SalesReportService.java
 /Users/arjunkharel/IdeaProjects/coding-test-ticketing/src/main/java/com/example/ticketing/service/TicketingService.java
